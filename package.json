@@ -3,11 +3,5 @@
   "version": "1.0.0",
   "description": "Reverse proxy for glasel.xyz",
   "main": "api/index.js",
-  "scripts": {
-    "start": "node api/index.js"
-  },
-  "dependencies": {
-    "express": "^4.19.0",
-    "http-proxy-middleware": "^3.0.0"
-  }
+  "scripts": {}
 }
