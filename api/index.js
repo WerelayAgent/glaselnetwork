@@ -26,6 +26,11 @@ app.use('/', createProxyMiddleware({
     target: TARGET,
     changeOrigin: true,
     selfHandleResponse: true,
+    onProxyReq: (proxyReq, req, res) => {
+        // Force the target server to send uncompressed data
+        // This is CRITICAL so our responseInterceptor can do string replacement on JS chunks and HTML
+        proxyReq.setHeader('accept-encoding', 'identity');
+    },
     onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
         // Only intercept HTML and Javascript files
         const contentType = proxyRes.headers['content-type'];
@@ -50,7 +55,7 @@ app.use('/', createProxyMiddleware({
             return response;
         }
         
-        // Return untouched buffer for images, fonts, etc.
+        // Return untouched buffer for anything else that slipped through
         return responseBuffer;
     })
 }));
