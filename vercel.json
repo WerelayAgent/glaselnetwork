@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "mkdir -p public && echo \"ready\" > public/index.html",
+  "outputDirectory": "public",
   "rewrites": [
     {
       "source": "/_next/static/media/(.*)",
