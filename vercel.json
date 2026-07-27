@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "mkdir -p public && echo \"ready\" > public/index.html",
+  "buildCommand": "mkdir -p public && touch public/.dummy",
   "outputDirectory": "public",
   "rewrites": [
     {
