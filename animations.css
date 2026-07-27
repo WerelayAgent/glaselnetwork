@@ -1,0 +1,80 @@
+/* animations.css - High Fidelity Vanilla CSS */
+
+/* 1. Scroll Reveal Animation */
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: opacity, transform;
+}
+
+.scroll-animate.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Delay modifiers if needed */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+
+/* 2. Background Pulse (Breathing effect on radial gradients) */
+@keyframes bgPulse {
+    0% {
+        opacity: 0.18;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.25;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 0.18;
+        transform: scale(1);
+    }
+}
+
+/* Ensure background gradient is visible and pulsing */
+.pointer-events-none .absolute.inset-0 {
+    opacity: 1 !important;
+}
+
+.pointer-events-none .absolute.inset-0:first-child {
+    animation: bgPulse 10s infinite ease-in-out;
+}
+
+/* 3. High Fidelity Spotlight Effect */
+.spotlight, .card {
+    position: relative;
+    overflow: hidden;
+}
+
+.spotlight::before, .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+        800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(111, 233, 255, 0.08),
+        transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.spotlight:hover::before, .card:hover::before {
+    opacity: 1;
+}
+
+/* 4. Navbar blur fix */
+header {
+    transition: background-color 0.3s, backdrop-filter 0.3s;
+}
+header.scrolled {
+    background-color: rgba(10, 19, 30, 0.8);
+    backdrop-filter: blur(12px);
+}
