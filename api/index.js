@@ -25,35 +25,65 @@ module.exports = async (req, res) => {
 
         const contentType = response.headers.get('content-type') || '';
         
-        if (contentType.includes('text/html') || contentType.includes('application/javascript') || contentType.includes('text/javascript')) {
+        if (contentType.includes('text/html')) {
             let text = await response.text();
             
-            // VERY SAFE string replacements to avoid breaking Javascript syntax!
-            const replacements = [
+            // In HTML, we must aggressively replace both the raw HTML AND the JSON-escaped RSC payload
+            // to ensure React Hydration perfectly matches.
+            
+            const htmlReplacements = [
+                { old: /Robinhood Chain/g, new: "Solana" },
+                { old: /robinhood/g, new: "solana" }, // Lowercase
+                { old: /Ether(?!net)/g, new: "SOL" },
+                { old: /\bETH\b/g, new: "SOL" },
+                { old: /0xf90C73ad8D700115afd8175eB2C1953C80d45157/g, new: "coming soon on pump.fun" },
+                { old: /0xf90C…5157/g, new: "coming soon on pump.fun" },
+                
+                // For Glasel -> Glasel Network, doing it globally in HTML is safe because it's just content/JSON data
+                // We do a temporary swap to avoid doubling
+                { old: /Glasel Network/g, new: "Glasel" },
+                { old: /Glaselxyz/g, new: "TEMPXYZ" },
+                { old: /GlaselOS/g, new: "TEMPOS" },
+                { old: /Glasel/g, new: "Glasel Network" },
+                
+                // Restore
+                { old: /TEMPXYZ/g, new: "Glaselxyz" },
+                { old: /TEMPOS/g, new: "GlaselOS" },
+                
+                // Specific code replacements (might be inside <pre> tags or JSON payload)
+                { old: /\\?"viem\\?"/g, new: '\\"@solana/web3.js\\"' },
+                { old: /createPublicClient, http, defineChain/g, new: "Connection, PublicKey" },
+                { old: /publicClient: createPublicClient\(\{\s*chain: solana,\s*transport: http\(\)\s*\}\),/g, new: "connection: new Connection('https://api.mainnet-beta.solana.com')," },
+                { old: /nativeCurrency: \{\s*name: \\?"SOL\\?",\s*symbol: \\?"SOL\\?",\s*decimals: 18\s*\},/g, new: "// Solana mainnet-beta endpoint" },
+                { old: /await commission\(mxeId, compDefId, encInputs\);/g, new: "await program.methods.commission(mxeId, encInputs).rpc();" }
+            ];
+
+            for (let r of htmlReplacements) {
+                text = text.replace(r.old, r.new);
+            }
+            
+            return res.send(text);
+        } else if (contentType.includes('application/javascript') || contentType.includes('text/javascript')) {
+            let text = await response.text();
+            
+            // In JS files, we MUST NOT replace "Glasel" globally because it breaks variables (SyntaxError)
+            // But we still need to replace robinhood -> solana in the client chunks!
+            // Let's do VERY conservative replacements in JS
+            const jsReplacements = [
                 { old: /Robinhood Chain/g, new: "Solana" },
                 { old: /"robinhood"/g, new: '"solana"' },
                 { old: /Ether(?!net)/g, new: "SOL" },
                 { old: /\bETH\b/g, new: "SOL" },
                 { old: /0xf90C73ad8D700115afd8175eB2C1953C80d45157/g, new: "coming soon on pump.fun" },
                 { old: /0xf90C…5157/g, new: "coming soon on pump.fun" },
-                { old: /Glasel — Private computation on a public chain\./g, new: "Glasel Network — Private computation on Solana." },
-                { old: /createPublicClient, http, defineChain/g, new: "Connection, PublicKey" },
-                { old: /"viem"/g, new: '"@solana/web3.js"' },
-                { old: /publicClient: createPublicClient\({ chain: robinhood, transport: http\(\) }\),/g, new: "connection: new Connection('https://api.mainnet-beta.solana.com')," },
-                { old: /publicClient: createPublicClient\({ chain: solana, transport: http\(\) }\),/g, new: "connection: new Connection('https://api.mainnet-beta.solana.com')," },
-                { old: /nativeCurrency: { name: "SOL", symbol: "SOL", decimals: 18 },/g, new: "// Solana mainnet-beta endpoint" },
-                { old: /nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },/g, new: "// Solana mainnet-beta endpoint" },
-                { old: /await commission\(mxeId, compDefId, encInputs\);/g, new: "await program.methods.commission(mxeId, encInputs).rpc();" },
                 
-                // Safe Glasel Network replacements
-                { old: />Glasel</g, new: ">Glasel Network<" },
-                { old: />Glasel /g, new: ">Glasel Network " },
+                // Safe string matches only
                 { old: /"Glasel"/g, new: '"Glasel Network"' },
                 { old: /'Glasel'/g, new: "'Glasel Network'" },
-                { old: /Glasel Network Network/g, new: "Glasel Network" }
+                { old: /`Glasel`/g, new: "`Glasel Network`" }
             ];
 
-            for (let r of replacements) {
+            for (let r of jsReplacements) {
                 text = text.replace(r.old, r.new);
             }
             
