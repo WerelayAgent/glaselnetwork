@@ -4,16 +4,12 @@
   "outputDirectory": "public",
   "rewrites": [
     {
-      "source": "/_next/static/media/(.*)",
-      "destination": "https://glasel.xyz/_next/static/media/$1"
+      "source": "/_next/static/media/:path*",
+      "destination": "https://glasel.xyz/_next/static/media/:path*"
     },
     {
-      "source": "/_next/image(.*)",
-      "destination": "https://glasel.xyz/_next/image$1"
-    },
-    {
-      "source": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|mp4|webm|woff|woff2|ttf|eot|bin|gltf|glb))",
-      "destination": "https://glasel.xyz/$1"
+      "source": "/_next/image",
+      "destination": "https://glasel.xyz/_next/image"
     },
     {
       "source": "/(.*)",
