@@ -1,13 +1,13 @@
 (function() {
     const replacements = [
-        { regex: /Robinhood Chain/g, new: "Solana" },
-        { regex: /robinhood/g, new: "solana" },
-        { regex: /Robinhood/g, new: "Solana" },
+        { regex: /Robinhood Chain/g, new: "Robinhood Chain" },
+        { regex: /robinhood/g, new: "robinhoodchain" },
+        { regex: /Robinhood/g, new: "Robinhood Chain" },
         { regex: /Ether(?!\s*net)/g, new: "SOL" },
         { regex: /\bETH\b/g, new: "SOL" },
-        { regex: /0xf90C73ad8D700115afd8175eB2C1953C80d45157/g, new: "coming soon on pump.fun" },
-        { regex: /0xf90C…5157/g, new: "coming soon on pump.fun" },
-        { regex: /Glasel — Private computation on a public chain\./g, new: "Glasel Network — Private computation on Solana." },
+        { regex: /0xf90C73ad8D700115afd8175eB2C1953C80d45157/g, new: "coming soon on ponsfamily.com" },
+        { regex: /0xf90C…5157/g, new: "coming soon on ponsfamily.com" },
+        { regex: /Glasel — Private computation on a public chain\./g, new: "Glasel Network — Private computation on Robinhood Chain." },
         
         { regex: /Glasel Network/g, new: "Glasel" },
         { regex: /Glaselxyz/g, new: "TEMPXYZ" },
@@ -19,12 +19,12 @@
         { regex: /TEMPURL/g, new: "glasel-network" },
         
         { regex: /createPublicClient, http, defineChain/g, new: "Connection, PublicKey" },
-        { regex: /publicClient: createPublicClient\(\{\s*chain: solana,\s*transport: http\(\)\s*\}\),/g, new: "connection: new Connection('https://api.mainnet-beta.solana.com')," },
-        { regex: /publicClient: createPublicClient\(\{\s*chain: robinhood,\s*transport: http\(\)\s*\}\),/g, new: "connection: new Connection('https://api.mainnet-beta.solana.com')," },
-        { regex: /nativeCurrency: \{\s*name: \\?"SOL\\?",\s*symbol: \\?"SOL\\?",\s*decimals: 18\s*\},/g, new: "// Solana mainnet-beta endpoint" },
-        { regex: /nativeCurrency: \{\s*name: \\?"Ether\\?",\s*symbol: \\?"ETH\\?",\s*decimals: 18\s*\},/g, new: "// Solana mainnet-beta endpoint" },
+        { regex: /publicClient: createPublicClient\(\{\s*chain: robinhoodchain,\s*transport: http\(\)\s*\}\),/g, new: "connection: new Connection('https://api.mainnet-beta.robinhoodchain.com')," },
+        { regex: /publicClient: createPublicClient\(\{\s*chain: robinhood,\s*transport: http\(\)\s*\}\),/g, new: "connection: new Connection('https://api.mainnet-beta.robinhoodchain.com')," },
+        { regex: /nativeCurrency: \{\s*name: \\?"SOL\\?",\s*symbol: \\?"SOL\\?",\s*decimals: 18\s*\},/g, new: "// Robinhood Chain mainnet-beta endpoint" },
+        { regex: /nativeCurrency: \{\s*name: \\?"Ether\\?",\s*symbol: \\?"ETH\\?",\s*decimals: 18\s*\},/g, new: "// Robinhood Chain mainnet-beta endpoint" },
         { regex: /await commission\(mxeId, compDefId, encInputs\);/g, new: "await program.methods.commission(mxeId, encInputs).rpc();" },
-        { regex: /"viem"/g, new: '"@solana/web3.js"' }
+        { regex: /"viem"/g, new: '"@robinhoodchain/web3.js"' }
     ];
 
     function replaceTextInNode(node) {
