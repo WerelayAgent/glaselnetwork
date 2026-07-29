@@ -1,9 +1,7 @@
 (function() {
     const replacements = [
-        { regex: /Robinhood Chain/g, new: "Robinhood Chain" },
-        { regex: /robinhood/g, new: "robinhoodchain" },
-        { regex: /Robinhood/g, new: "Robinhood Chain" },
-        { regex: /Ether(?!\s*net)/g, new: "SOL" },
+        { regex: /\bEthereum\b/g, new: "Robinhood Chain" },
+        { regex: /\bethereum\b/g, new: "robinhoodchain" },
         { regex: /\bETH\b/g, new: "SOL" },
         { regex: /0xf90C73ad8D700115afd8175eB2C1953C80d45157/g, new: "coming soon on ponsfamily.com" },
         { regex: /0xf90C…5157/g, new: "coming soon on ponsfamily.com" },
